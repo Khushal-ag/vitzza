@@ -1,6 +1,7 @@
+const BASE_URL = import.meta.env.VITE_GEOCODING_API_URL;
 export async function getAddress({ latitude, longitude }) {
   const res = await fetch(
-    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}`
+    `${BASE_URL}?latitude=${latitude}&longitude=${longitude}`
   );
   if (!res.ok) throw Error("Failed getting address");
 
