@@ -13,7 +13,6 @@ module.exports = {
   rules: {
     "react-refresh/only-export-components": "warn",
     "tailwindcss/no-custom-classname": "off",
-    "tailwindcss/classnames-order": "warn",
     "@typescript-eslint/ban-ts-comment": "off",
   },
   settings: {
