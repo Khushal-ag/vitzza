@@ -1,8 +1,5 @@
-// Test ID: IIDSAT
-
 import { useLoaderData } from "react-router-dom";
 
-import { getOrder } from "../../services/apiRestaurant";
 import {
   calcMinutesLeft,
   formatCurrency,
@@ -27,7 +24,8 @@ function Order() {
   return (
     <div className="space-y-8 px-4 py-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-semibold">{`Order ${id}Status`}</h2>
+        <h2 className="text-xl font-semibold">{`OrderId: #${id}`}</h2>
+        <h2 className="ms-40 text-xl font-semibold text-stone-500">Status:</h2>
 
         <div className="space-x-2">
           {priority && (
@@ -54,7 +52,7 @@ function Order() {
 
       <ul className="dive-stone-200 divide-y border-y">
         {cart.map((item) => (
-          <OrderItem item={item} key={item.id} />
+          <OrderItem item={item} key={item.pizzaId} />
         ))}
       </ul>
 
@@ -73,11 +71,6 @@ function Order() {
       </div>
     </div>
   );
-}
-
-export async function loader({ params }) {
-  const order = await getOrder(params.orderId);
-  return order;
 }
 
 export default Order;
