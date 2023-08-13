@@ -1,30 +1,32 @@
-// import { getAddress } from "./geocoding.js";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-// function getPosition() {
-//   return new Promise(function (resolve, reject) {
-//     navigator.geolocation.getCurrentPosition(resolve, reject);
-//   });
-// }
+import { getAddress } from "../../services/apiGeocoding";
 
-// async function fetchAddress() {
-//   // 1) We get the user's geolocation position
-//   const positionObj = await getPosition();
-//   const position = {
-//     latitude: positionObj.coords.latitude,
-//     longitude: positionObj.coords.longitude,
-//   };
+function getPosition() {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+}
 
-//   // 2) Then we use a reverse geocoding API to get a description of the user's address, so we can display it the order form, so that the user can correct it if wrong
-//   const addressObj = await getAddress(position);
-//   const address = `${addressObj?.locality}, ${addressObj?.city} ${addressObj?.postcode}, ${addressObj?.countryName}`;
+export const fetchAddress = createAsyncThunk("user/fetchAddress", async () => {
+  const positionObj = await getPosition();
+  const position = {
+    latitude: positionObj.coords.latitude,
+    longitude: positionObj.coords.longitude,
+  };
 
-//   // 3) Then we return an object with the data that we are interested in
-//   return { position, address };
-// }
-import { createSlice } from "@reduxjs/toolkit";
+  const addressObj = await getAddress(position);
+  const address = `${addressObj?.locality}, ${addressObj?.city} ${addressObj?.postcode}, ${addressObj?.countryName}`;
+
+  return { position, address };
+});
 
 const initialState = {
   username: "",
+  status: "idle",
+  position: {},
+  address: "",
+  error: "",
 };
 
 const userSlice = createSlice({
@@ -35,6 +37,21 @@ const userSlice = createSlice({
       state.username = action.payload;
     },
   },
+  extraReducers: (builder) =>
+    builder
+      .addCase(fetchAddress.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAddress.fulfilled, (state, action) => {
+        state.position = action.payload.position;
+        state.address = action.payload.address;
+        state.status = "idle";
+      })
+      .addCase(fetchAddress.rejected, (state) => {
+        state.status = "error";
+        state.error =
+          'Error: There is a problem in fetching your Address. "Please allow location access or try again later"';
+      }),
 });
 
 export const { updateName } = userSlice.actions;
