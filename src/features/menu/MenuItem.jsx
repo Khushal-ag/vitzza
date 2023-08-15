@@ -23,11 +23,13 @@ function MenuItem({ pizza }) {
   }
 
   return (
-    <li className="flex gap-4 py-2">
+    <li className="flex gap-4 py-3">
       <img
         src={imageUrl}
         alt={name}
-        className={`h-24 ${soldOut ? "opacity-70 grayscale" : ""}`}
+        className={`h-28 w-32 rounded-md shadow-lg ${
+          soldOut ? "opacity-70 grayscale" : ""
+        }`}
       />
       <div className="flex grow flex-col pt-0.5">
         <p className="font-medium">{name}</p>
